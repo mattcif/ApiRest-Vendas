@@ -1,5 +1,7 @@
 package org.example.domain.entity;
 
+import org.example.domain.entity.Cliente;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
