@@ -1,6 +1,17 @@
 package org.example.domain.entity;
 
 public class Cliente {
+    public Cliente(){}
+
+    public Cliente(String nome) {
+        this.nome = nome;
+    }
+
+    public Cliente(Integer id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
     private Integer id;
     private String nome;
 
@@ -18,5 +29,13 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
     }
 }
