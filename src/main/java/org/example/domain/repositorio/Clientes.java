@@ -8,15 +8,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 @Repository
 public class Clientes {
-    private static final String SELECT_ALL = "SELECT * FROM CLIENTE";
-    private static final String UPDATE = "update cliente set nome = ? where id = ? ";
-    private static final String DELETE = "delete from cliente where id = ? ";
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -27,29 +25,35 @@ public class Clientes {
         entityManager.persist(cliente);
         return cliente;
     }
-
+    @Transactional
     public Cliente atualizar(Cliente cliente){
-        jdbcTemplate.update(UPDATE, new Object[]{
-                cliente.getNome(), cliente.getId()});
+        entityManager.merge(cliente);
         return cliente;
     }
-
+    @Transactional
     public void deletar(Cliente cliente){
-        deletar(cliente.getId());
+        if(!entityManager.contains(cliente)) {
+            cliente = entityManager.merge(cliente);
+        }
+        entityManager.remove(cliente);
     }
+    @Transactional
     public void deletar(Integer id) {
-        jdbcTemplate.update(DELETE, new Object[]{id});
+        Cliente cliente = entityManager.find(Cliente.class, id);
+        deletar(cliente);
     }
-
+    @Transactional(readOnly = true)
     public List<Cliente> buscarPorNome(String nome) {
-        return jdbcTemplate.query(
-                SELECT_ALL.concat(" where nome like ? "),
-                new Object[]{"%" + nome + "%"},
-                obterClienteMapper());
+        String jpql = " select c from Cliente c where c.nome like :nome "; //: define o parametro
+        TypedQuery<Cliente> query = entityManager.createQuery(jpql, Cliente.class);
+        query.setParameter("nome", "%" + nome +"%");
+        return query.getResultList();
     }
-
+    @Transactional(readOnly = true)
     public List<Cliente> obterTodos() {
-        return jdbcTemplate.query(SELECT_ALL, obterClienteMapper());
+        return entityManager
+                .createQuery("from Cliente", Cliente.class)
+                .getResultList();
     }
 
     private RowMapper<Cliente> obterClienteMapper() {
