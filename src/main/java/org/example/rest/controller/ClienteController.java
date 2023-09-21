@@ -31,10 +31,22 @@ public class ClienteController {
         return ResponseEntity.notFound().build();
 
     }
-    @PostMapping("/api/clientes")
+    @PostMapping("/api/clientes/")
     @ResponseBody
     public ResponseEntity save(@RequestBody Cliente cliente) {
         Cliente clienteSalvo = clientes.save(cliente);
         return ResponseEntity.ok(clienteSalvo);
+    }
+    @DeleteMapping("/api/clientes/{id}")
+    @ResponseBody
+    public ResponseEntity delete(@PathVariable Integer id) {
+        Optional<Cliente> cliente = clientes.findById(id);
+
+        if (cliente.isPresent()) {
+            clientes.delete(cliente.get());
+            return ResponseEntity.noContent().build(); // 204
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
