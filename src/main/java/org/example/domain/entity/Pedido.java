@@ -2,6 +2,7 @@ package org.example.domain.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "pedido")
@@ -16,6 +17,8 @@ public class Pedido {
     private LocalDate dataPedido;
     @Column(name = "total", length = 20, precision = 2)
     private BigDecimal total;
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itens;
 
     public Integer getId() {
         return id;
