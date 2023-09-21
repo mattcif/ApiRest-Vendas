@@ -61,6 +61,6 @@ public class ClienteController {
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);//containing retorn todos que contem a busca
         Example example = Example.of(filtro, matcher);
         List<Cliente> lista =  clientes.findAll(example);
-        return clientes.findAll();
+        return clientes.findAll(example);
     }
 }
