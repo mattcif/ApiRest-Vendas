@@ -1,4 +1,4 @@
-package org.example.domain.repositorio;
+package org.example.domain.repository;
 
 import org.example.domain.entity.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
