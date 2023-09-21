@@ -1,4 +1,6 @@
 package org.example.domain.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Set;
 import javax.persistence.*;
 
@@ -21,6 +23,7 @@ public class Cliente {
     private Integer id;
     @Column (name = "nome", length = 100)
     private String nome;
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY) // lazy tem melhor desempenho
     private Set<Pedido> pedidos;
 
