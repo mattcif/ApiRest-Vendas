@@ -30,4 +30,15 @@ public class ProdutoController {
         return produtos.save(produto);
     }
 
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        produtos.findById(id)
+                .map(produto -> {
+                    produtos.delete(produto);
+                    return produto;
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+    }
+
 }
