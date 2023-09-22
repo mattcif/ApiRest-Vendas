@@ -41,4 +41,16 @@ public class ProdutoController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
     }
 
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Integer id, @RequestBody Produto produto) {
+        produtos.findById(id)
+                .map(produtoExistente -> {
+                    produto.setId(produtoExistente.getId());
+                    produtos.save(produto);
+                    return produtoExistente;
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+    }
+
+
 }
