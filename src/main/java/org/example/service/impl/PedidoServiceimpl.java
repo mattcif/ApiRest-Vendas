@@ -10,6 +10,7 @@ import org.example.domain.repository.Clientes;
 import org.example.domain.repository.ItemsPedido;
 import org.example.domain.repository.Pedidos;
 import org.example.domain.repository.Produtos;
+import org.example.exception.PedidoNaoEncontradoException;
 import org.example.exception.RegraNegocioException;
 import org.example.rest.dto.ItemPedidoDTO;
 import org.example.rest.dto.PedidoDTO;
@@ -59,6 +60,17 @@ public class PedidoServiceimpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        repository
+                .findById(id)
+                .map(pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return repository.save(pedido);
+                }).orElseThrow(() -> new PedidoNaoEncontradoException());
     }
 
     private List<ItemPedido> converterItems(Pedido pedido,List<ItemPedidoDTO> items){
